@@ -18,19 +18,22 @@ bot.start((ctx) => {
 
     const today = new Date();
     const hour = today.getHours();
-    console.log(hour);
+
+    var currentHour = moment().format("HH");
+
+    console.log(currentHour);
     var greeting;
     
-    if (hour >= 5 && hour < 12) {
+    if (hour >= 3 && hour < 12) {
         greeting = "Selamat Pagi";
-    } else if (hour > 12 && hour < 17) {
+    } else if (hour >= 12 && hour < 15) {
         greeting = "Selamat Siang";
-    } else if (hour > 17 && hour < 21) {
+    } else if (hour >= 15 && hour < 20) {
         greeting = "Selamat Sore";
-    } else if (hour > 21 && hour < 24) {
+    } else if (hour >= 20 && hour < 3) {
         greeting = "Selamat Malam";
     } else {
-        greeting = "Selamat Malam";
+        greeting = "Hai";
     }
 
     const nama = ctx.from.last_name == undefined ? ctx.from.first_name : ctx.from.first_name + ' ' + ctx.from.last_name;

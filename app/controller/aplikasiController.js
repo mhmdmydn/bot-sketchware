@@ -10,6 +10,7 @@ const bot = new Telegraf(BOT_TOKEN)
 
 bot.on('document', async (ctx) => {
 
+    console.log(ctx.message);
     console.log(ctx.message.caption.split(' ')[0]);
     switch (ctx.message.caption.split(' ')[0]) {
         case "add":
