@@ -9,13 +9,15 @@ const app = express();
 const botController = require('./app/controller/botController')
 const aplikasiController = require('./app/controller/aplikasiController')
 
-const URL = process.env.URL || 'https://swbotid.herokuapp.com/';
+const URL = process.env.BASE_URL_WEBHOOK || 'https://swbotid.herokuapp.com/';
 const BOT_TOKEN = process.env.BOT_TOKEN || ''
 const AUTHOR = process.env.AUTHOR
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2002;
 
 const bot = new Telegraf(BOT_TOKEN)
 bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
+app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
+
 
 bot.use(aplikasiController)
 bot.use(botController)
