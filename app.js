@@ -9,7 +9,7 @@ const app = express();
 const botController = require('./app/controller/botController')
 const aplikasiController = require('./app/controller/aplikasiController')
 
-const URL = process.env.BASE_URL_WEBHOOK || 'https://swbotid.herokuapp.com/';
+const URL = process.env.BASE_URL_WEBHOOK || '';
 const BOT_TOKEN = process.env.BOT_TOKEN || ''
 const AUTHOR = process.env.AUTHOR
 const PORT = process.env.PORT || 2002;
