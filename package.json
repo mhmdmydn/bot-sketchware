@@ -1,0 +1,20 @@
+{
+  "name": "bottelegramv2",
+  "version": "1.0.0",
+  "description": "Bot telegram versi 2 with inline query",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "author": "Muhammad Mayudin",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "mongoose": "^6.0.8",
+    "telegraf": "^4.4.2"
+  }
+}
