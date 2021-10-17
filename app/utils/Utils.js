@@ -32,7 +32,7 @@ exports.download = (url, dest) => {
           }).pipe(file)
       } else if (res.statusCode === 302 || res.statusCode === 301) {
         // Recursively follow redirects, only a 200 will resolve.
-        download(res.headers.location, dest).then(() => resolve())
+        this.download(res.headers.location, dest).then(() => resolve())
       } else {
         reject(new Error(`Download request failed, response status: ${res.statusCode} ${res.statusMessage}`))
       }
