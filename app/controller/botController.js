@@ -130,8 +130,10 @@ bot.on('message', async (ctx) => {
             console.log(`Youtube ID : ${id}`);
             
             Utils.fetchURL(baseUrlAPI + id).then((res) => {
-                
+                console.log(res);
                 if (res.status == true) {
+                    ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
+
                     ctx.telegram.sendVideo(ctx.chat.id, {
                         url: res.format[1].downloadURL
                     }, {
@@ -147,6 +149,7 @@ bot.on('message', async (ctx) => {
                     })
                 }
             }).catch((err) => {
+                console.log(err);
                 ctx.reply(err.message, {
                     reply_to_message_id: ctx.message.message_id
                 })
