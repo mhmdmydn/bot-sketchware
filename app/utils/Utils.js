@@ -7,7 +7,7 @@ exports.fetchURL = async (url) => {
     return await axios({
         url: url,
         method: 'GET',
-        timeout: 8000,
+        timeout: 80000,
         headers: {
             'Content-Type': 'application/json',
         }

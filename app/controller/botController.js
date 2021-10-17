@@ -147,7 +147,7 @@ bot.on('message', async (ctx) => {
                     })
                 }
             }).catch((err) => {
-                ctx.reply(err, {
+                ctx.reply(err.message, {
                     reply_to_message_id: ctx.message.message_id
                 })
             })
