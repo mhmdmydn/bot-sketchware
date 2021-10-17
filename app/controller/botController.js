@@ -125,7 +125,7 @@ bot.on('message', async (ctx) => {
             break;
         
         case '/ytdl': case '/ytdl@' + ctx.botInfo.username:
-            if (pecah[1) {
+            if (pecah[1]) {
                 const baseUrlAPI = 'https://ghodel-api.herokuapp.com/api/v1/yt/stream/'
                 const id = Utils.getID(pecah[1])
                 console.log(`Youtube ID : ${id}`);
