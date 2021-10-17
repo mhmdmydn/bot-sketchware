@@ -134,7 +134,7 @@ bot.on('message', async (ctx) => {
 
                     console.log(res.data);
                     ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
-                    const inlineKeyboard = []
+                    var inlineKeyboard = []
 
                     res.data.format.forEach(format => {
                         inlineKeyboard += [{
