@@ -135,7 +135,7 @@ bot.on('message', async (ctx) => {
                     ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
 
                     ctx.telegram.sendVideo(ctx.chat.id, {
-                        url: res.data.format[1].downloadURL
+                        url: res.data.format[0].downloadURL
                     }, {
                         reply_to_message_id: ctx.message.message_id,
                         parse_mode : 'HTML',
@@ -150,9 +150,7 @@ bot.on('message', async (ctx) => {
                 }
             }).catch((err) => {
                 console.log(err);
-                ctx.reply(err.message, {
-                    reply_to_message_id: ctx.message.message_id
-                })
+                Utils.logger(ctx, err)
             })
             
             break;
