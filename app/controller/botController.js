@@ -87,6 +87,7 @@ bot.on('message', async (ctx) => {
     const command = ctx.message.text;
     const pecah = command.split(' ')
 
+
     console.log(pecah[0]);
     switch (pecah[0]) {
         case '/admin': case '/admin@' + ctx.botInfo.username:
@@ -124,35 +125,40 @@ bot.on('message', async (ctx) => {
             break;
         
         case '/ytdl': case '/ytdl@' + ctx.botInfo.username:
+            if (pecah[1) {
+                const baseUrlAPI = 'https://ghodel-api.herokuapp.com/api/v1/yt/stream/'
+                const id = Utils.getID(pecah[1])
+                console.log(`Youtube ID : ${id}`);
+                try {
+                    const res = await Utils.fetchURL(baseUrlAPI + id)
 
-            const baseUrlAPI = 'https://ghodel-api.herokuapp.com/api/v1/yt/stream/'
-            const id = Utils.getID(pecah[1])
-            console.log(`Youtube ID : ${id}`);
-            
-            Utils.fetchURL(baseUrlAPI + id).then((res) => {
-                console.log(res);
-                if (res.data.status == true) {
-                    ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
+                    console.log(res);
 
-                    ctx.telegram.sendVideo(ctx.chat.id, {
-                        url: res.data.format[0].downloadURL
-                    }, {
-                        reply_to_message_id: ctx.message.message_id,
-                        parse_mode : 'HTML',
-                        caption: `Title : ${res.data.format[1].title}`,
-                        reply_markup: {
-                            inline_keyboard: [
-                                [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
-                                [{text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL}]
-                            ]
-                        }
-                    })
+                    if (res.data.status == true) {
+                        ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
+
+                        ctx.telegram.sendVideo(ctx.chat.id, {
+                            url: res.data.format[0].downloadURL
+                        }, {
+                            reply_to_message_id: ctx.message.message_id,
+                            parse_mode: 'HTML',
+                            caption: `Title : ${res.data.format[1].title}`,
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
+                                    [{ text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL }]
+                                ]
+                            }
+                        })
+                    }
+
+                } catch (error) {
+                    console.log(err);
+                    bot.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
                 }
-            }).catch((err) => {
-                console.log(err);
-                Utils.logger(ctx, err)
-            })
-            
+            } else {
+                ctx.reply('Harap masukan url video')
+            }
             break;
         default:
             break
