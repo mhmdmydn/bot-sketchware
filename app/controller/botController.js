@@ -131,19 +131,19 @@ bot.on('message', async (ctx) => {
             
             Utils.fetchURL(baseUrlAPI + id).then((res) => {
                 console.log(res);
-                if (res.status == true) {
+                if (res.data.status == true) {
                     ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
 
                     ctx.telegram.sendVideo(ctx.chat.id, {
-                        url: res.format[1].downloadURL
+                        url: res.data.format[1].downloadURL
                     }, {
                         reply_to_message_id: ctx.message.message_id,
                         parse_mode : 'HTML',
-                        caption: `Title : ${res.format[1].title}`,
+                        caption: `Title : ${res.data.format[1].title}`,
                         reply_markup: {
                             inline_keyboard: [
-                                [{ text: res.format[0].qualityLabel, url: res.format[0].downloadURL }],
-                                [{text: res.format[1].qualityLabel, url: res.format[1].downloadURL}]
+                                [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
+                                [{text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL}]
                             ]
                         }
                     })
