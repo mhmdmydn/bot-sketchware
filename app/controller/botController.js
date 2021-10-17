@@ -46,7 +46,8 @@ bot.help(async (ctx) => {
     const usernameBot = await ctx.telegram.getMe()
     
     ctx.reply(
-        `@${usernameBot.username} {text} - Cari photo dari pixabay`
+        `@${usernameBot.username} {text} - Cari photo dari pixabay inline query` +
+        `\n /ytdl@${usernameBot.username} {url video} - Youtube downloader`
     )
 })
 
@@ -86,6 +87,7 @@ bot.on('message', async (ctx) => {
     const command = ctx.message.text;
     const pecah = command.split(' ')
 
+    console.log(pecah[0]);
     switch (pecah[0]) {
         case '/admin': case '/admin@' + ctx.botInfo.username:
             if (ctx.chat.type != 'private') {
@@ -120,10 +122,50 @@ bot.on('message', async (ctx) => {
             })
 
             break;
-    
+        
+        case '/ytdl': case '/ytdl@' + ctx.botInfo.username:
+
+            const baseUrlAPI = 'https://ghodel-api.herokuapp.com/api/v1/yt/stream/'
+            const id = Utils.getID(pecah[1])
+            console.log(`Youtube ID : ${id}`);
+            
+            Utils.fetchURL(baseUrlAPI + id).then((res) => {
+                
+                if (res.status == true) {
+                    ctx.telegram.sendVideo(ctx.chat.id, {
+                        url: res.format[1].downloadURL
+                    }, {
+                        reply_to_message_id: ctx.message.message_id,
+                        parse_mode : 'HTML',
+                        caption: `Title : ${res.format[1].title}`,
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: res.format[0].qualityLabel, url: res.format[0].downloadURL }],
+                                [{text: res.format[1].qualityLabel, url: res.format[1].downloadURL}]
+                            ]
+                        }
+                    })
+                }
+            }).catch((err) => {
+                ctx.reply(err, {
+                    reply_to_message_id: ctx.message.message_id
+                })
+            })
+            
+            break;
         default:
             break
     }
+})
+
+//otomatis kirim pesan jika ada member masuk grup
+bot.on('new_chat_members', (ctx) => {
+    var member = ctx.message.left_chat_member.last_name == undefined ? ctx.message.left_chat_member.first_name : ctx.message.left_chat_member.first_name + ' ' + ctx.message.left_chat_member.last_name
+
+    var pesan = `Selamat Datang <a href='tg://user?id=${ctx.message.new_chat_member.id}'>${member}</a> `
+    pesan += `di grup <b>${ctx.chat.title}</b> \n\nSelamat berdiskusi 😊`
+    
+    ctx.replyWithHTML(pesan)
 })
 
 //otomatis kirim pesan jika ada member keluar grup

@@ -3,6 +3,7 @@ const axios = require('axios')
 
 exports.fetchURL = async (url) => {
     
+    console.log(url);
     return await axios({
         url: url,
         method: 'GET',
@@ -41,4 +42,19 @@ exports.sendMessage = (ctx, msg) => {
 
 exports.logger = (ctx, err) => {
     ctx.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
+}
+
+exports.getID = (url) => {
+
+    var ID = '';
+    url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    if (url[2] !== undefined) {
+        ID = url[2].split(/[^0-9a-z_\-]/i);
+        ID = ID[0];
+    }
+    else {
+        ID = url;
+    }
+    
+    return ID;
 }
