@@ -80,7 +80,7 @@ bot.on('inline_query', async (ctx) => {
             console.log(results);
             ctx.answerInlineQuery(results)
         
-        }).catch(err => bot.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err))
+        }).catch(err => console.log(err) )
 })
 
 bot.on('message', async (ctx) => {
@@ -132,32 +132,30 @@ bot.on('message', async (ctx) => {
                 try {
                     const res = await Utils.fetchURL(baseUrlAPI + id)
 
-                    console.log(res);
-
-                    if (res.data.status == true) {
-                        ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
-
-                        ctx.telegram.sendVideo(ctx.chat.id, {
-                            url: res.data.format[0].downloadURL
-                        }, {
-                            reply_to_message_id: ctx.message.message_id,
-                            parse_mode: 'HTML',
-                            caption: `Title : ${res.data.format[1].title}`,
-                            reply_markup: {
-                                inline_keyboard: [
-                                    [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
-                                    [{ text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL }]
-                                ]
-                            }
-                        })
-                    }
-
-                } catch (error) {
+                    console.log(res.data);
+                    ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
+                    
+                    ctx.telegram.sendVideo(ctx.chat.id, {
+                        url: res.data.format[0].downloadURL
+                    }, {
+                        reply_to_message_id: ctx.message.message_id,
+                        parse_mode: 'HTML',
+                        caption: `Title : ${res.data.format[1].title}`,
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
+                                [{ text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL }]
+                            ]
+                        }
+                    })
+                    
+                } catch (err) {
                     console.log(err);
-                    bot.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
                 }
             } else {
-                ctx.reply('Harap masukan url video')
+                ctx.telegram.sendMessage(ctx.chat.id, 'Harap masukan url youtube video', {
+                    reply_to_message_id: ctx.message.message_id
+                })
             }
             break;
         default:
