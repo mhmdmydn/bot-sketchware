@@ -170,7 +170,7 @@ bot.on('message', async (ctx) => {
 
 //otomatis kirim pesan jika ada member masuk grup
 bot.on('new_chat_members', (ctx) => {
-    var member = ctx.message.left_chat_member.last_name == undefined ? ctx.message.left_chat_member.first_name : ctx.message.left_chat_member.first_name + ' ' + ctx.message.left_chat_member.last_name
+    var member = ctx.message.new_chat_member.last_name == undefined ? ctx.message.new_chat_member.first_name : ctx.message.new_chat_member.first_name + ' ' + ctx.message.new_chat_member.last_name
 
     var pesan = `Selamat Datang <a href='tg://user?id=${ctx.message.new_chat_member.id}'>${member}</a> `
     pesan += `di grup <b>${ctx.chat.title}</b> \n\nSelamat berdiskusi 😊`
