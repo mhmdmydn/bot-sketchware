@@ -134,18 +134,23 @@ bot.on('message', async (ctx) => {
 
                     console.log(res.data);
                     ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
-                    
+                    const inlineKeyboard = []
+
+                    res.data.format.forEach(format => {
+                        inlineKeyboard += [{
+                            text: format.qualityLabel,
+                            url: format.downloadURL
+                        }]
+                    });
+
                     ctx.telegram.sendVideo(ctx.chat.id, {
                         url: res.data.format[0].downloadURL
                     }, {
                         reply_to_message_id: ctx.message.message_id,
                         parse_mode: 'HTML',
-                        caption: `Title : ${res.data.format[1].title}`,
+                        caption: `Title : ${res.data.format[0].title}`,
                         reply_markup: {
-                            inline_keyboard: [
-                                [{ text: res.data.format[0].qualityLabel, url: res.data.format[0].downloadURL }],
-                                [{ text: res.data.format[1].qualityLabel, url: res.data.format[1].downloadURL }]
-                            ]
+                            inline_keyboard: inlineKeyboard
                         }
                     })
                     
