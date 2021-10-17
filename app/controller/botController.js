@@ -142,17 +142,23 @@ bot.on('message', async (ctx) => {
                             url: format.downloadURL
                         }]
                     });
+                    
+                    
 
                     ctx.telegram.sendVideo(ctx.chat.id, {
                         url: res.data.format[0].downloadURL
-                    }, {
-                        reply_to_message_id: ctx.message.message_id,
-                        parse_mode: 'HTML',
-                        caption: `Title : ${res.data.format[0].title}`,
-                        reply_markup: {
-                            inline_keyboard: inlineKeyboard
-                        }
                     })
+                    
+                    // ctx.telegram.sendVideo(ctx.chat.id, {
+                    //     url: res.data.format[0].downloadURL
+                    // }, {
+                    //     reply_to_message_id: ctx.message.message_id,
+                    //     parse_mode: 'HTML',
+                    //     caption: `Title : ${res.data.format[0].title}`,
+                    //     reply_markup: {
+                    //         inline_keyboard: inlineKeyboard
+                    //     }
+                    // })
                     
                 } catch (err) {
                     console.log(err);
