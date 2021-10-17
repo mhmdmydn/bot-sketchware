@@ -133,6 +133,8 @@ bot.on('message', async (ctx) => {
                     const res = await Utils.fetchURL(baseUrlAPI + id)
 
                     console.log(res.data);
+
+                    
                     ctx.telegram.sendChatAction(ctx.chat.id, "upload_video")
                     var inlineKeyboard = []
 
@@ -143,12 +145,12 @@ bot.on('message', async (ctx) => {
                         }]
                     });
                     
-                    
+                    await Utils.download(res.data.format[0].downloadURL, 'tmp');
 
                     ctx.telegram.sendVideo(ctx.chat.id, {
                         url: res.data.format[0].downloadURL
                     })
-                    
+
                     // ctx.telegram.sendVideo(ctx.chat.id, {
                     //     url: res.data.format[0].downloadURL
                     // }, {
