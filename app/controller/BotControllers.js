@@ -150,11 +150,20 @@ exports.main = (bot) => {
                 "reply_to_message_id": ctx.message.message_id
             })
         } else {
-            const info = await ytdl.getInfo(pecah[1])
-            console.log(info);
-
-            let format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
-            console.log('Format found!', format);
+            try {
+                const info = await ytdl.getInfo(pecah[1])
+                console.log(info);
+                
+                let format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
+                
+                console.log('Format found!', format);
+                ctx.reply(format, {
+                    "reply_to_message_id": ctx.message.message_id
+                })
+            } catch (error) {
+                console.log(error);
+                
+            }
             
             ctx.reply(format, {
                 "reply_to_message_id": ctx.message.message_id
