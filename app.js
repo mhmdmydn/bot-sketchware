@@ -19,7 +19,6 @@ bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
 bot.use(botController)
-bot.use(aplikasiController)
 
 
 //logging jika bot error akan mengirim ke author
