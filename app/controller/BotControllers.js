@@ -154,11 +154,12 @@ exports.main = (bot) => {
 
         const file = await ytdl.getURLVideoID(url) + ".mp4"
 
-        Utils.checkAndMakeDir('./public' + file, (err) => {
+        Utils.checkAndMakeDir('./public/', (err) => {
             if (err) throw err
             console.log(err);
             
         })
+
         console.log('PATH : ' + file);
         
 
@@ -166,7 +167,7 @@ exports.main = (bot) => {
             console.log("Validasi URL : " + ytdl.validateURL(url));
             
             try {
-                const saveStream = fs.createWriteStream(file);
+                const saveStream = fs.createWriteStream('./public/' + file);
 
                 ytdl(url, {quality: 'lowestvideo', filter: 'videoandaudio'})
                     .pipe(saveStream.on('finish', () => {
