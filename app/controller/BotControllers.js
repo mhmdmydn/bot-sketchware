@@ -163,35 +163,36 @@ exports.main = (bot) => {
         console.log('PATH : ' + file);
         
 
-        if (ytdl.validateURL(url)) {
-            console.log("Validasi URL : " + ytdl.validateURL(url));
+        if (url != undefined) {
             
-            try {
-                const saveStream = fs.createWriteStream('./public/' + file);
-
-                ytdl(url, {quality: 'lowestvideo', filter: 'videoandaudio'})
-                    .pipe(saveStream.on('finish', () => {
-
-                        ctx.replyWithVideo({
-                            url: file
-                        }, {
-                            reply_to_message_id: message_id
-                        }).then(() => {
-                            fs.unlink(file);
-                        })
-                    }))
+            if (ytdl.validateURL(url)) {
+                console.log("Validasi URL : " + ytdl.validateURL(url));
                 
-            } catch (error) {
-                console.log("ERROR YTDL : " + error);
+                // try {
+                //     const saveStream = fs.createWriteStream('./public/' + file);
+    
+                //     ytdl(url, {quality: 'lowestvideo', filter: 'videoandaudio'})
+                //         .pipe(saveStream.on('finish', () => {
+    
+                //             ctx.replyWithVideo({
+                //                 url: file
+                //             }, {
+                //                 reply_to_message_id: message_id
+                //             }).then(() => {
+                //                 fs.unlink(file);
+                //             })
+                //         }))
+                    
+                // } catch (error) {
+                //     console.log("ERROR YTDL : " + error);
+                // }
+    
+                
+            } else {
+                ctx.reply(`***${url}*** : URL tidak valid`)
             }
-
-            
-        } else {
-            ctx.reply(`***${url}*** : URL tidak valid`)
         }
-
-
-
+        
     })
 
 }
