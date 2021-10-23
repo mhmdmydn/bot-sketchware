@@ -156,10 +156,12 @@ exports.main = (bot) => {
                 
                 const  format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
                 
-                console.log('Format found!', format);
-                ctx.reply(JSON.stringify(format, null, 4), {
-                    "reply_to_message_id": ctx.message.message_id
-                })
+                if (format.hasVideo) {
+                    ctx.reply(JSON.stringify(format, null, 4), {
+                        "reply_to_message_id": ctx.message.message_id
+                    })
+                }
+                
             } catch (error) {
                 console.log(error);
                 
