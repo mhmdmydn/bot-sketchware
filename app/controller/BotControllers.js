@@ -4,11 +4,12 @@ const fs = require('fs')
 const ytdl = require('ytdl-core')
 const youtubedl = require('youtube-dl-exec')
 const Utils = require('./../utils/Utils')
-const { throws } = require('assert')
 const apikey = process.env.PIXABAY_APIKEY || ''
 
 
 exports.main = (bot) => {
+
+
 
     //command start bot
     bot.start((ctx) => {
@@ -153,6 +154,11 @@ exports.main = (bot) => {
 
         const file = await ytdl.getURLVideoID(url) + ".mp4"
 
+        Utils.checkAndMakeDir('./public' + file, (err) => {
+            if (err) throw err
+            console.log(err);
+            
+        })
         console.log('PATH : ' + file);
         
 
@@ -160,21 +166,20 @@ exports.main = (bot) => {
             console.log("Validasi URL : " + ytdl.validateURL(url));
             
             try {
+                const saveStream = fs.createWriteStream('./public/' + file);
+
                 await ytdl(url)
-                .pipe(fs.createWriteStream('./public/' + file))
-                .on('finish', (err) => {
-                    if (err) throw err
-                    
-                    console.log('Download video selesai...');
-
-                    ctx.replyWithChatAction('upload_video')
-
-                    ctx.replyWithVideo({
-                        url: './public/'+ file
-                    }, {
-                        reply_to_message_id: message_id
+                    .once('error', (err) => {
+                        console.log('Read Stream Error', err)
                     })
-                    
+                    .pipe(saveStream)
+                    .once('finish', () => {
+                        
+                        ctx.replyWithVideo({
+                            url: './public/' + file
+                        }, {
+                            reply_to_message_id: message_id
+                        })
                 })
 
             } catch (error) {

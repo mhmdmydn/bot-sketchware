@@ -101,3 +101,17 @@ exports.getID = (url) => {
     
     return ID;
 }
+
+exports.checkAndMakeDir = (dir, cb) =>  {
+  fs.access(dir, (err) => {
+    if (err)
+      fs.mkdir(dir, (err) => {
+        if (err)
+          return cb(err);
+
+        return cb();
+      });
+    else
+      return cb();
+  });
+}
