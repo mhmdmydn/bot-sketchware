@@ -116,9 +116,9 @@ exports.main = (bot) => {
             admins.forEach((element, index) => {
                 console.log(element);
                 if (element.status == "creator") {
-                    msg += `👥 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Creator</b>)\n`
+                    msg += `👤 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Creator</b>)\n`
                 } else if (element.status == "administrator") {
-                    msg += `👥 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Administrator</b>)\n`
+                    msg += `👤 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Administrator</b>)\n`
                 }
             });
             
@@ -154,44 +154,8 @@ exports.main = (bot) => {
 
         const file = await ytdl.getURLVideoID(url) + ".mp4"
 
-        Utils.checkAndMakeDir('./public/', (err) => {
-            if (err) throw err
-            console.log(err);
-            
-        })
-
-        console.log('PATH : ' + file);
+        console.log('file : ' + file);
         
-
-        if (url != undefined) {
-            
-            if (ytdl.validateURL(url)) {
-                console.log("Validasi URL : " + ytdl.validateURL(url));
-                
-                // try {
-                //     const saveStream = fs.createWriteStream('./public/' + file);
-    
-                //     ytdl(url, {quality: 'lowestvideo', filter: 'videoandaudio'})
-                //         .pipe(saveStream.on('finish', () => {
-    
-                //             ctx.replyWithVideo({
-                //                 url: file
-                //             }, {
-                //                 reply_to_message_id: message_id
-                //             }).then(() => {
-                //                 fs.unlink(file);
-                //             })
-                //         }))
-                    
-                // } catch (error) {
-                //     console.log("ERROR YTDL : " + error);
-                // }
-    
-                
-            } else {
-                ctx.reply(`***${url}*** : URL tidak valid`)
-            }
-        }
         
     })
 
