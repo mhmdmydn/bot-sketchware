@@ -1,5 +1,7 @@
 'use-strict'
 const moment = require('moment')
+const fs = require('fs')
+const ytdl = require('ytdl-core')
 const Utils = require('./../utils/Utils')
 const apikey = process.env.PIXABAY_APIKEY || ''
 
@@ -105,7 +107,7 @@ exports.main = (bot) => {
             var msg = `⭐<b>  ${ctx.chat.title}</b> \n`
             msg += `👥 ${members.toString()} members\n`
             msg += `➖➖➖➖➖➖➖➖➖\n`
-            msg += `🔰 Creator \n`
+            msg += `🔰 Pengurus Grup \n`
             
             var num = 1;
             admins.forEach((element, index) => {
@@ -135,6 +137,31 @@ exports.main = (bot) => {
         ctx.reply(JSON.stringify(ctx.update, null, 4), {
             "reply_to_message_id": ctx.message.message_id
         })
+    })
+
+    //command ytdl 
+    bot.command('/ytdl', async (ctx) => {
+        
+        const command = ctx.message.text;
+        const pecah = command.split(' ')
+        
+        if (!pecah[1]) {
+            ctx.reply('Harap masukan url youtube!!!', {
+                "reply_to_message_id": ctx.message.message_id
+            })
+        } else {
+            const info = await ytdl.getInfo(pecah[1])
+            console.log(info);
+
+            let format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
+            console.log('Format found!', format);
+            
+            ctx.reply(format, {
+                "reply_to_message_id": ctx.message.message_id
+            })
+
+        }
+
     })
 
 }
