@@ -1,5 +1,7 @@
 'use-strict'
 const moment = require('moment')
+const Utils = require('./../utils/Utils')
+const apikey = process.env.PIXABAY_APIKEY || ''
 
 
 exports.main = (bot) => {
