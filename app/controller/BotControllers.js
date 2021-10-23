@@ -152,7 +152,8 @@ exports.main = (bot) => {
 
         if (ytdl.validateURL(url)) {
 
-            const video = await ytdl(url)
+            try {
+                await ytdl(url)
                 .pipe(fs.createWriteStream('./public/' + file))
                 .on('finish', (err) => {
                     if (err) throw err
@@ -160,7 +161,7 @@ exports.main = (bot) => {
                     console.log('Download video selesai...');
 
                     ctx.replyWithChatAction('upload_video')
-                    
+
                     ctx.replyWithVideo({
                         url: './public/'+ file
                     }, {
@@ -168,6 +169,11 @@ exports.main = (bot) => {
                     })
                     
                 })
+
+            } catch (error) {
+                console.log(error);
+                
+            }
 
             
         } else {
