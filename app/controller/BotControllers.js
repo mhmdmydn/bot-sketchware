@@ -155,7 +155,17 @@ exports.main = (bot) => {
         const file = await ytdl.getURLVideoID(url) + ".mp4"
 
         console.log('file : ' + file);
-        
+
+        if (url == undefined) {
+            ctx.reply("Harap masukan url", {
+                "reply_to_message_id": ctx.message.message_id
+            })
+
+        } else {
+
+            console.log(ytdl.validateURL(url));
+            
+        }
         
     })
 
