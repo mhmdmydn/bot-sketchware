@@ -98,6 +98,7 @@ exports.main = (bot) => {
     bot.command('/admin', async (ctx) => {
         if (ctx.chat.type != 'private') {
             let admins = await ctx.getChatAdministrators(ctx.chat.id)
+            console.log("Admin results: " + admins);
             let members = await ctx.getChatMembersCount(ctx.chat.id)
             
             var msg = `⭐<b>  ${ctx.chat.title}</b> \n`
