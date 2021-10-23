@@ -111,13 +111,19 @@ exports.main = (bot) => {
             admins.forEach((element, index) => {
                 console.log(element);
                 if (element.status == "creator") {
-                    msg += num++ + ` <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a>\n`
+                    msg += `👥 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Creator</b>)\n`
+                } else if (element.status == "administrator") {
+                    msg += `👥 <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a> (<b>Administrator</b>)\n`
                 }
             });
             
 
             ctx.reply(msg, {
                 "parse_mode": 'HTML',
+                "reply_to_message_id": ctx.message.message_id
+            })
+        } else {
+            ctx.reply("Command tidak bisa diakses dalam private chat", {
                 "reply_to_message_id": ctx.message.message_id
             })
         }
