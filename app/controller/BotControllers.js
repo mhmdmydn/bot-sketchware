@@ -148,10 +148,17 @@ exports.main = (bot) => {
         const args = ctx.update.message.text.split(' ');
         const url = args[1];
 
+        console.log("URL : " + url);
+        
+
         const file = await ytdl.getURLVideoID(url) + ".mp4"
 
-        if (ytdl.validateURL(url)) {
+        console.log('PATH : ' + file);
+        
 
+        if (ytdl.validateURL(url)) {
+            console.log("Validasi URL : " + ytdl.validateURL(url));
+            
             try {
                 await ytdl(url)
                 .pipe(fs.createWriteStream('./public/' + file))
