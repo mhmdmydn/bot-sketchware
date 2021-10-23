@@ -6,7 +6,7 @@ config();
 const express = require('express')
 const app = express();
 
-const botController = require('./app/controller/botController')
+const botController = require('./app/controller/BotControllers')
 const aplikasiController = require('./app/controller/aplikasiController')
 
 const URL = process.env.BASE_URL_WEBHOOK || '';
@@ -18,7 +18,7 @@ const bot = new Telegraf(BOT_TOKEN)
 bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
-bot.use(botController)
+bot.use(botController.main(bot))
 
 
 //logging jika bot error akan mengirim ke author

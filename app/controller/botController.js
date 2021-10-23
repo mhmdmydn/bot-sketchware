@@ -13,34 +13,37 @@ const bot = new Telegraf(BOT_TOKEN)
 const apikey = process.env.PIXABAY_APIKEY || ''
 
 
+
 //command start bot
-bot.start((ctx) => {
-
-    const today = new Date();
-    const hour = today.getHours();
-
-    var currentHour = moment().format("HH");
-
-    console.log(currentHour);
-    var greeting;
+    bot.start((ctx) => {
+        
+        const today = new Date();
+        const hour = today.getHours();
+        
+        var currentHour = moment().format("HH");
+        console.log(currentHour);
+        var greeting;
+        if (hour >= 3 && hour < 12) {
+        
+            greeting = "Selamat Pagi";
+        } else if (hour >= 12 && hour < 15) {
+        
+            greeting = "Selamat Siang";
+        } else if (hour >= 15 && hour < 20) {
+        
+            greeting = "Selamat Sore";
+        } else if (hour >= 20 && hour < 3) {
+       
+            greeting = "Selamat Malam";
+        } else {
+        
+            greeting = "Hai";
+        }
+        
+        const nama = ctx.from.last_name == undefined ? ctx.from.first_name : ctx.from.first_name + ' ' + ctx.from.last_name;
+        ctx.replyWithMarkdown(`${greeting}, [${nama}](tg://user?id=${ctx.from.id}) 😊, Untuk bantuan ketik /help. `)
+    })
     
-    if (hour >= 3 && hour < 12) {
-        greeting = "Selamat Pagi";
-    } else if (hour >= 12 && hour < 15) {
-        greeting = "Selamat Siang";
-    } else if (hour >= 15 && hour < 20) {
-        greeting = "Selamat Sore";
-    } else if (hour >= 20 && hour < 3) {
-        greeting = "Selamat Malam";
-    } else {
-        greeting = "Hai";
-    }
-
-    const nama = ctx.from.last_name == undefined ? ctx.from.first_name : ctx.from.first_name + ' ' + ctx.from.last_name;
-    ctx.replyWithMarkdown(`${greeting}, [${nama}](tg://user?id=${ctx.from.id}) 😊, Untuk bantuan ketik /help. `)
-
-})
-
 //command help
 bot.help(async (ctx) => {
     const usernameBot = await ctx.telegram.getMe()
