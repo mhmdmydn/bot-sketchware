@@ -105,12 +105,12 @@ exports.main = (bot) => {
             var msg = `⭐<b>  ${ctx.chat.title}</b> \n`
             msg += `👥 ${members.toString()} members\n`
             msg += `➖➖➖➖➖➖➖➖➖\n`
-            msg += `🔰 Administrator \n`
+            msg += `🔰 Creator \n`
             
             var num = 1;
             admins.forEach((element, index) => {
                 console.log(element);
-                if (element.status == "administrator") {
+                if (element.status == "creator") {
                     msg += num++ + ` <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a>\n`
                 }
             });
