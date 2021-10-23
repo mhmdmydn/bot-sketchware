@@ -152,12 +152,12 @@ exports.main = (bot) => {
         } else {
             try {
                 const info = await ytdl.getInfo(pecah[1])
-                console.log(info);
+
                 
-                let format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
+                const  format = await ytdl.chooseFormat(info.formats, { quality: 'lowestvideo' });
                 
                 console.log('Format found!', format);
-                ctx.reply(format, {
+                ctx.reply(JSON.stringify(format, null, 4), {
                     "reply_to_message_id": ctx.message.message_id
                 })
             } catch (error) {
