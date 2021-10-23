@@ -168,23 +168,20 @@ exports.main = (bot) => {
             try {
                 const saveStream = fs.createWriteStream('./public/' + file);
 
-                await ytdl(url)
-                    .once('error', (err) => {
-                        console.log('Read Stream Error', err)
-                    })
-                    .pipe(saveStream)
-                    .once('finish', () => {
-                        
+                await ytdl(url, {quality: 'highestvideo', filter: 'videoandaudio'})
+                    .pipe(saveStream.on('finish', () => {
+
                         ctx.replyWithVideo({
                             url: './public/' + file
                         }, {
                             reply_to_message_id: message_id
+                        }).then(() => {
+                            fs.unlink('./public/' + file);
                         })
-                })
-
-            } catch (error) {
-                console.log(error);
+                    }))
                 
+            } catch (error) {
+                console.log("ERROR YTDL : " + error);
             }
 
             
