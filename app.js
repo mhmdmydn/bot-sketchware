@@ -18,9 +18,9 @@ const bot = new Telegraf(BOT_TOKEN)
 bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
-
-bot.use(aplikasiController)
 bot.use(botController)
+bot.use(aplikasiController)
+
 
 //logging jika bot error akan mengirim ke author
 bot.catch((err, ctx) => {
