@@ -99,6 +99,7 @@ exports.main = (bot) => {
         if (ctx.chat.type != 'private') {
             let admins = await ctx.getChatAdministrators(ctx.chat.id)
             console.log("Admin results: " + admins);
+
             let members = await ctx.getChatMembersCount(ctx.chat.id)
             
             var msg = `⭐<b>  ${ctx.chat.title}</b> \n`
@@ -108,6 +109,7 @@ exports.main = (bot) => {
             
             var num = 1;
             admins.forEach((element, index) => {
+                console.log(element);
                 if (element.status == "administrator") {
                     msg += num++ + ` <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a>\n`
                 }
