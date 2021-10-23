@@ -93,7 +93,7 @@ exports.main = (bot) => {
     
     //command list admin grup 
 
-    bot.command('/admin', (ctx) => {
+    bot.command('/admin', async (ctx) => {
         if (ctx.chat.type != 'private') {
             let admins = await ctx.getChatAdministrators(ctx.chat.id)
             let members = await ctx.getChatMembersCount(ctx.chat.id)
