@@ -166,17 +166,17 @@ exports.main = (bot) => {
             console.log("Validasi URL : " + ytdl.validateURL(url));
             
             try {
-                const saveStream = fs.createWriteStream('./public/' + file);
+                const saveStream = fs.createWriteStream(file);
 
-                await ytdl(url, {quality: 'highestvideo', filter: 'videoandaudio'})
+                ytdl(url, {quality: 'lowestvideo', filter: 'videoandaudio'})
                     .pipe(saveStream.on('finish', () => {
 
                         ctx.replyWithVideo({
-                            url: './public/' + file
+                            url: file
                         }, {
                             reply_to_message_id: message_id
                         }).then(() => {
-                            fs.unlink('./public/' + file);
+                            fs.unlink(file);
                         })
                     }))
                 
