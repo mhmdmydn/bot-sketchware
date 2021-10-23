@@ -23,7 +23,8 @@ bot.use(botController.main(bot))
 
 //logging jika bot error akan mengirim ke author
 bot.catch((err, ctx) => {
-  bot.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
+  ctx.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
+  
 })
 
 
