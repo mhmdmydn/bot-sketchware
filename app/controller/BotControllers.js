@@ -172,7 +172,7 @@ exports.main = (bot) => {
                 preferFreeFormats: true,
                 youtubeSkipDashManifest: true,
             }).then(output => {
-                ctx.deleteMessage
+                ctx.deleteMessage(ctx.message.message_id)
                 ctx.reply(`***Title: ${output.title} ***\n[Download Link](${output.requested_formats[0].url})\n***Video Requested By: [${mention}]***`, {
                     reply_to_message_id: message_id,
                     parse_mode: 'Markdown'
