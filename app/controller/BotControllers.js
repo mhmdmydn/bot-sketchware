@@ -1,4 +1,6 @@
 'use-strict'
+const moment = require('moment')
+
 
 exports.main = (bot) => {
 
@@ -60,4 +62,68 @@ exports.main = (bot) => {
             "parse_mode": 'HTML',
         })
     })
+
+    //inline query untuk mencari gambar
+    bot.on('inline_query', async (ctx) => {
+        const query = ctx.inlineQuery.query
+        
+        Utils.fetchURL(`https://pixabay.com/api/?key=${apikey}&q=${query}`)
+            .then((res) => {
+                const data = res.data.hits
+                let results = data.map((item, index) => {
+                    return {
+                        type: 'photo',
+                        id: String(index),
+                        photo_url: item.webformatURL,
+                        thumb_url: item.previewURL,
+                        caption: `[Klik disini](${item.webformatURL}) untuk membuka gambar`,
+                        parse_mode: 'Markdown',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: "Cari lagi 🔍", switch_inline_query_current_chat: query }
+                                ]
+                            ]
+                        }
+                    }
+                })
+                console.log(results);
+                ctx.answerInlineQuery(results)
+            }).catch(err => console.log(err))
+    })
+    
+    //command list admin grup 
+
+    bot.command('/admin', (ctx) => {
+        if (ctx.chat.type != 'private') {
+            let admins = await ctx.getChatAdministrators(ctx.chat.id)
+            let members = await ctx.getChatMembersCount(ctx.chat.id)
+            
+            var msg = `⭐<b>  ${ctx.chat.title}</b> \n`
+            msg += `👥 ${members.toString()} members\n`
+            msg += `➖➖➖➖➖➖➖➖➖\n`
+            msg += `🔰 Administrator \n`
+            
+            var num = 1;
+            admins.forEach((element, index) => {
+                if (element.status == "administrator") {
+                    msg += num++ + ` <a href="tg://user?id=${element.user.id}">${(element.user.username == undefined) ? element.user.first_name + ' ' + element.user.last_name : element.user.username}</a>\n`
+                }
+            });
+            
+
+            ctx.reply(msg, {
+                "parse_mode": 'HTML',
+                "reply_to_message_id": ctx.message.message_id
+            })
+        }
+    })
+
+    //command dump info json
+
+    bot.command('/myinfo', (ctx) => {
+        ctx.reply(JSON.stringify(ctx.update, null, 4), {
+            "reply_to_message_id": ctx.message.message_id
+        })
+    })
+
 }

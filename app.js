@@ -26,6 +26,7 @@ bot.catch((err, ctx) => {
   bot.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
 })
 
+
 //konfigurasi untuk menjalankn bot
 bot.launch()
 
