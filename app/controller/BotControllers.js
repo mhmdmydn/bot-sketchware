@@ -171,11 +171,13 @@ exports.main = (bot) => {
                 noCheckCertificate: true,
                 preferFreeFormats: true,
                 youtubeSkipDashManifest: true,
-            }).then(output =>
+            }).then(output => {
+                ctx.deleteMessage
                 ctx.reply(`***Title: ${output.title} ***\n[Download Link](${output.requested_formats[0].url})\n***Video Requested By: [${mention}]***`, {
                     reply_to_message_id: message_id,
                     parse_mode: 'Markdown'
                 })
+            }
             )
         } catch (error) {
             console.error(error);
