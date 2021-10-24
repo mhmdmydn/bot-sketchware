@@ -163,24 +163,26 @@ exports.main = (bot) => {
 
         } else {
 
-            ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
-                .pipe(fs.createWriteStream(file).on('finish', () => {
-                    console.log('Mengirim video...');
-                    
-                    ctx.telegram.sendChatAction('upload_video')
-                    ctx.telegram.sendVideo(ctx.chat.id, {
-                        url: file,
-                    }, {
-                        reply_to_message_id: message_id
-                    }).then(() => {
-                        console.log('Menghapus file...');
+            await ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
+                .pipe(await fs.createWriteStream(file)
+                    .on('error', () => {
                         
-                        fs.unlink(file)
                     })
-            }))
-
+                    .on('finish', () => {
+                        console.log('Mengirim video...');
+                        
+                        await ctx.telegram.sendChatAction('upload_video')
+                        
+                        await ctx.telegram.sendVideo(ctx.chat.id, {
+                            url: file,
+                        }, {
+                            reply_to_message_id: message_id
+                        }).then(() => {
+                            console.log('Menghapus file...');
+                            fs.unlink(file)
+                        })
+                    }))
         }
-        
     })
 
 }
