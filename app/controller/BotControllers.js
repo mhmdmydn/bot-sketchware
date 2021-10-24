@@ -174,7 +174,7 @@ exports.main = (bot) => {
                         ctx.telegram.sendChatAction('upload_video')
                         
                         await ctx.telegram.sendVideo(ctx.chat.id, {
-                            url: __dirname + file,
+                            url: 'https://swbotid.herokuapp.com/' + file,
                         }, {
                             reply_to_message_id: message_id
                         }).then(() => {
