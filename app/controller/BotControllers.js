@@ -171,7 +171,7 @@ exports.main = (bot) => {
                     .on('finish', async () => {
                         console.log('Mengirim video...');
                         
-                        await ctx.telegram.sendChatAction('upload_video')
+                        ctx.telegram.sendChatAction('upload_video')
                         
                         await ctx.telegram.sendVideo(ctx.chat.id, {
                             url: file,
