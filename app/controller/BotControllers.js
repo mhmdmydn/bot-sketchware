@@ -166,9 +166,9 @@ exports.main = (bot) => {
             await ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
                 .pipe(await fs.createWriteStream(file)
                     .on('error', () => {
-                        
+                        console.log("Error Create Write Stream");
                     })
-                    .on('finish', () => {
+                    .on('finish', async () => {
                         console.log('Mengirim video...');
                         
                         await ctx.telegram.sendChatAction('upload_video')
