@@ -156,14 +156,28 @@ exports.main = (bot) => {
 
         console.log('file : ' + file);
 
-        if (url === undefined) {
+        if (!ytdl.validateURL(url)) {
             ctx.reply("Harap masukan url", {
                 "reply_to_message_id": ctx.message.message_id
             })
 
         } else {
 
-            console.log(ytdl.validateURL(url));
+            ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
+                .pipe(fs.createWriteStream(file).on('finish', () => {
+                    console.log('Mengirim video...');
+                    
+                    ctx.telegram.sendChatAction('upload_video')
+                    ctx.telegram.sendVideo(ctx.chat.id, {
+                        url: file,
+                    }, {
+                        reply_to_message_id: message_id
+                    }).then(() => {
+                        console.log('Menghapus file...');
+                        
+                        fs.unlink(file)
+                    })
+            }))
 
         }
         
