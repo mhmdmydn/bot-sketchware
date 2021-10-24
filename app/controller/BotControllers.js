@@ -156,7 +156,7 @@ exports.main = (bot) => {
 
         console.log('file : ' + file);
 
-        if (url == undefined) {
+        if (url === undefined) {
             ctx.reply("Harap masukan url", {
                 "reply_to_message_id": ctx.message.message_id
             })
@@ -164,7 +164,7 @@ exports.main = (bot) => {
         } else {
 
             console.log(ytdl.validateURL(url));
-            
+
         }
         
     })
