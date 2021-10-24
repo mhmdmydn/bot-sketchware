@@ -11,7 +11,7 @@ const app = express();
 app.use(express.static('public'))
 
 const botController = require('./app/controller/BotControllers')
-const aplikasiController = require('./app/controller/aplikasiController')
+const aplikasiController = require('./app/controller/AplikasiControllers')
 
 const URL = process.env.BASE_URL_WEBHOOK || '';
 const BOT_TOKEN = process.env.BOT_TOKEN || ''
@@ -23,12 +23,13 @@ bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
 bot.use(botController.main(bot))
+bot.use(aplikasiController.main(bot))
 
 
 //logging jika bot error akan mengirim ke author
 bot.catch((err, ctx) => {
   ctx.telegram.sendMessage(AUTHOR, `[ X ] Ooops, encountered an error for ${ctx.updateType} :` + err)
-  
+
 })
 
 
