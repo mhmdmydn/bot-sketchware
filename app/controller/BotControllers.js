@@ -173,7 +173,7 @@ exports.main = (bot) => {
                         
                         ctx.telegram.sendChatAction('upload_video')
 
-                        const folder = fs.readdirSync('./public/' + file)
+                        const folder = fs.readdirSync('public/' + file)
 
                         console.log(folder.length());
                         
