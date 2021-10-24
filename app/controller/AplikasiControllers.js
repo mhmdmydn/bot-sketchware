@@ -1,5 +1,7 @@
 'use-strict'
 const moment = require('moment')
+const aplikasi = require('./../model/AplikasiModel')
+
 
 exports.main = (bot) => {
     
