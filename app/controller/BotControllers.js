@@ -164,7 +164,7 @@ exports.main = (bot) => {
         } else {
 
             await ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
-                .pipe(await fs.createWriteStream(__dirname + './public/' + file)
+                .pipe(await fs.createWriteStream(__dirname + '/public/' + file)
                     .on('error', () => {
                         console.log("Error Create Write Stream");
                     })
@@ -174,7 +174,7 @@ exports.main = (bot) => {
                         ctx.telegram.sendChatAction('upload_video')
                         
                         await ctx.telegram.sendVideo(ctx.chat.id, {
-                            url: __dirname + './public/' + file,
+                            url: __dirname + '/public/' + file,
                         }, {
                             reply_to_message_id: message_id
                         }).then(() => {
