@@ -6,6 +6,10 @@ config();
 const express = require('express')
 const app = express();
 
+
+//public folder
+app.use(express.static('public'))
+
 const botController = require('./app/controller/BotControllers')
 const aplikasiController = require('./app/controller/aplikasiController')
 

@@ -164,7 +164,7 @@ exports.main = (bot) => {
         } else {
 
             await ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
-                .pipe(await fs.createWriteStream(file)
+                .pipe(await fs.createWriteStream('./public/' + file)
                     .on('error', () => {
                         console.log("Error Create Write Stream");
                     })
@@ -174,7 +174,7 @@ exports.main = (bot) => {
                         ctx.telegram.sendChatAction('upload_video')
                         
                         await ctx.telegram.sendVideo(ctx.chat.id, {
-                            url: 'https://swbotid.herokuapp.com/' + file,
+                            url: './public/' + file,
                         }, {
                             reply_to_message_id: message_id
                         }).then(() => {
