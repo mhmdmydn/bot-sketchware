@@ -25,6 +25,7 @@ exports.main = (bot) => {
             
             aplikasi.findOne({ file_name: pecah[1] }).then((res) => {
                 
+                console.log(res);
                 ctx.replyWithDocument(res.file_id, {
                     'reply_to_message_id': ctx.message.message_id,
                     'parse_mode': 'HTML',
@@ -32,6 +33,7 @@ exports.main = (bot) => {
                 })
             
             }).catch((err) => {
+                console.log(err);
                 ctx.reply('[ ✖ ] Terjadi error : ' + error, {
                     'reply_to_message_id': ctx.message.message_id,
                     'reply_markup': {
@@ -65,9 +67,12 @@ exports.main = (bot) => {
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
         const found = admins.find(e => e.user.id == ctx.message.from.id)
 
+        console.log(found);
+
         if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
             aplikasi.findOneAndDelete({ file_name: pecah })
                 .then((res) => {
+                    console.log(res);
                     if (res) {
                         ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi. cek /listapp", {
                             'reply_to_message_id': ctx.message.message_id
@@ -79,6 +84,8 @@ exports.main = (bot) => {
                     }
                 
                 }).catch((err) => {
+                    console.log(err);
+                    console.log(err);
                     ctx.reply("[ ✖ ] Terjadi error : " + err, {
                         'reply_to_message_id': ctx.message.message_id
                     })
