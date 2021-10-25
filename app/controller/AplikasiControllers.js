@@ -289,7 +289,7 @@ exports.main = (bot) => {
             status.push(res.status)
         })
         
-        console.log(status);
+        console.log(status.includes('administrator'));
 
         ctx.reply('Application Logs Heroku', {
             reply_to_message_id: ctx.message.message_id
