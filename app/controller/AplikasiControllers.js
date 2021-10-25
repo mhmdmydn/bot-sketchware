@@ -66,45 +66,46 @@ exports.main = (bot) => {
         const pecah = query.split(' ').pop()
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
         console.log("admin : ", admins);
-        const found = admins.find(e => e.user.id == ctx.message.from.id)
 
-        console.log("getchatmember : ", await ctx.getChatMember(ctx.chat.id));
-
-        console.log('Admin Found : ',found);
-
-        if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
-            aplikasi.findOneAndDelete({ file_name: pecah })
-                .then((res) => {
-                    console.log(res);
-                    if (res) {
-                        ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi. cek /listapp", {
+        admins.map((found) => {
+            
+            if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
+                aplikasi.findOneAndDelete({ file_name: pecah })
+                    .then((res) => {
+                        console.log(res);
+                        if (res) {
+                            ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi. cek /listapp", {
+                                'reply_to_message_id': ctx.message.message_id
+                            })
+                        } else {
+                            ctx.reply("[ ❗ ] Aplikasi tidak ditemukan. cek /listapp", {
+                                'reply_to_message_id': ctx.message.message_id
+                            })
+                        }
+                    
+                    }).catch((err) => {
+                        console.log(err);
+                        console.log(err);
+                        ctx.reply("[ ✖ ] Terjadi error : " + err, {
                             'reply_to_message_id': ctx.message.message_id
                         })
-                    } else {
-                        ctx.reply("[ ❗ ] Aplikasi tidak ditemukan. cek /listapp", {
-                            'reply_to_message_id': ctx.message.message_id
-                        })
-                    }
-                
-                }).catch((err) => {
-                    console.log(err);
-                    console.log(err);
-                    ctx.reply("[ ✖ ] Terjadi error : " + err, {
-                        'reply_to_message_id': ctx.message.message_id
                     })
-                })
-        } else {
-            ctx.reply('[ ✖ ] anda tidak punya akses', {
-                'reply_to_message_id': ctx.message.message_id,
-                'reply_markup': {
-                    'inline_keyboard': [
-                        [
-                            { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
+            } else {
+                ctx.reply('[ ✖ ] anda tidak punya akses', {
+                    'reply_to_message_id': ctx.message.message_id,
+                    'reply_markup': {
+                        'inline_keyboard': [
+                            [
+                                { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
+                            ]
                         ]
-                    ]
-                }
-            })
-        }
+                    }
+                })
+            }
+        })
+        
+
+
     })
 
     bot.on('document', async (ctx) => {
@@ -279,7 +280,7 @@ exports.main = (bot) => {
     bot.command('/debug', async (ctx) => {
 
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
-        console.log(admins);
+        //console.log(admins);
         admins.map((res) => {
             console.log(res);
         })
