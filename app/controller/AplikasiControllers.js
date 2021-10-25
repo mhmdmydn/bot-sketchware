@@ -67,6 +67,7 @@ exports.main = (bot) => {
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
         console.log("admin : ", admins);
         const found = admins.find(e => e.user.id == ctx.message.from.id)
+
         console.log("getchatmember : ", await ctx.getChatMember(ctx.chat.id));
 
         console.log('Admin Found : ',found);
@@ -273,5 +274,14 @@ exports.main = (bot) => {
                 }
                 break
         }
+    })
+
+    bot.command('/debug', async (ctx) => {
+
+        console.log("getchatmember : ", await ctx.getChatMember(ctx.chat.id));
+
+        ctx.reply('Application Logs Heroku', {
+            reply_to_message_id: ctx.message.message_id
+        })
     })
 }
