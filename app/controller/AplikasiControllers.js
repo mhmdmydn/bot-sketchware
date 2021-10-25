@@ -124,7 +124,7 @@ exports.main = (bot) => {
                     let admins = await ctx.getChatAdministrators(ctx.chat.id)
                     console.log(admins);
 
-                    admins.map((found) => {
+                    admins.map( async (found) => {
 
                         if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
                             
