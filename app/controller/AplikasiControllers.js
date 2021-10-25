@@ -65,7 +65,7 @@ exports.main = (bot) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
-        console.log(admin);
+        console.log(admins);
         const found = admins.find(e => e.user.id == ctx.message.from.id)
         console.log(ctx.getChatMember(ctx.chat.id));
 
