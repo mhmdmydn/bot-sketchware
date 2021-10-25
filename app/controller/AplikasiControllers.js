@@ -65,11 +65,11 @@ exports.main = (bot) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
-        console.log(admins);
+        console.log("admin : ", admins);
         const found = admins.find(e => e.user.id == ctx.message.from.id)
-        console.log(ctx.getChatMember(ctx.chat.id));
+        console.log("getchatmember : ", await ctx.getChatMember(ctx.chat.id));
 
-        console.log(found);
+        console.log('Admin Found : ',found);
 
         if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
             aplikasi.findOneAndDelete({ file_name: pecah })
