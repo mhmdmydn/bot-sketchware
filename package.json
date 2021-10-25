@@ -2,6 +2,10 @@
   "name": "bottelegramv2",
   "version": "1.0.0",
   "description": "Bot telegram versi 2 with inline query",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mhmdmydn/bot-sketchware.git"
+  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

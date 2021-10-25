@@ -210,7 +210,7 @@ exports.main = (bot) => {
                     
                     console.log(admins);
                     
-                    admins.map((found) => {
+                    admins.map( async (found) => {
 
                         if (found.status == 'administrator' || found.status == 'creator' || ctx.message.from.id == AUTHOR) {
                             
