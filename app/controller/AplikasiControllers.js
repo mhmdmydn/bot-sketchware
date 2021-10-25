@@ -278,7 +278,7 @@ exports.main = (bot) => {
 
     bot.command('/debug', async (ctx) => {
 
-        console.log("getchatmember : ", await ctx.getChatMember(ctx.chat.id));
+        console.log("getchatmember : ", await ctx.getChatMember(ctx.message.message_id));
 
         ctx.reply('Application Logs Heroku', {
             reply_to_message_id: ctx.message.message_id
