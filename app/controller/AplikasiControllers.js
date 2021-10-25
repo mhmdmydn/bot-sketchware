@@ -280,11 +280,10 @@ exports.main = (bot) => {
 
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
         console.log(admins);
-        admins.find((res) => {
+        admins.map((res) => {
             console.log(res);
         })
         
-
 
         ctx.reply('Application Logs Heroku', {
             reply_to_message_id: ctx.message.message_id
