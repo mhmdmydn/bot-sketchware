@@ -284,7 +284,7 @@ exports.main = (bot) => {
         let admins = await ctx.getChatAdministrators(ctx.chat.id)
         //console.log(admins);
         admins.map((res) => {
-            console.log(res);
+            console.log(res.status);
         })
         
 
