@@ -22,6 +22,12 @@ const bot = new Telegraf(BOT_TOKEN)
 bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
+
+
+bot.use(botController.main(bot))
+bot.use(aplikasiController.main(bot))
+
+
 bot.use((ctx, next) => {
 	if (ctx.chat.id > 0) return next()
 
@@ -35,10 +41,6 @@ bot.use((ctx, next) => {
 		.catch(console.log)
 		.then((_) => next(ctx))
 })
-
-bot.use(botController.main(bot))
-bot.use(aplikasiController.main(bot))
-
 
 //logging jika bot error akan mengirim ke author
 bot.catch((err, ctx) => {
