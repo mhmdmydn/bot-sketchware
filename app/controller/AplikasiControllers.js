@@ -5,18 +5,24 @@ const aplikasi = require('./../model/AplikasiModel')
 
 exports.main = (bot) => {
     
-    bot.command('/listapp', async (ctx) => {
+    bot.command('/list', async (ctx) => {
         const apps = await aplikasi.find({})
         var listArr = '🗄 Daftar aplikasi tersimpan : \n\n';
         
         apps.forEach((element, index) => {
-            listArr += index + 1 + '.  /getapp ' + element.file_name + '\n'
+            if (index === 0) {
+                listArr += '╔ /app ' + element.file_name + '\n'
+            } else if (index === (data.length - 1)) {
+                listArr += '╚ /app ' + element.file_name + '\n'
+            } else {
+                listArr += '╠ /app ' + element.file_name + '\n'
+            }
         });
         
         ctx.replyWithHTML(listArr)
     })
     
-    bot.command('/getapp', (ctx) => {
+    bot.command('/app', (ctx) => {
         const query = ctx.message.text;
         const pecah = query.split(' ')
         
@@ -25,7 +31,6 @@ exports.main = (bot) => {
             
             aplikasi.findOne({ file_name: pecah[1] }).then((res) => {
                 
-                console.log(res);
                 ctx.replyWithDocument(res.file_id, {
                     'reply_to_message_id': ctx.message.message_id,
                     'parse_mode': 'HTML',
@@ -35,45 +40,131 @@ exports.main = (bot) => {
             }).catch((err) => {
                 console.log(err);
                 ctx.reply('[ ✖ ] Terjadi error : ' + error, {
-                    'reply_to_message_id': ctx.message.message_id,
-                    'reply_markup': {
-
-                        'inline_keyboard': [
-                            [
-                                { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                            ]
-                        ]
-                    }
+                    'reply_to_message_id': ctx.message.message_id
                 })
             })
         } else {
             
             ctx.reply('[ ✖ ] Harap masukan nama aplikasi setelah command /getapp {nama_apk}. untuk melihat nama apk /listapp', {
-                'reply_to_message_id': ctx.message.message_id,
-                'reply_markup': {
-                    'inline_keyboard': [
-                        [
-                            { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                        ]
-                    ]
-                }
+                'reply_to_message_id': ctx.message.message_id
             })
         }
     })
-    
-    bot.command('/deleteapp', async (ctx) => {
+
+
+    bot.command('/save', async (ctx) => {
+
+        const fileName = ctx.message.document.file_name.split('.').pop()
+
+        if (fileName == 'apk') {
+
+            if (ctx.message.from.id === AUTHOR && ctx.from.isAdmin) {
+                
+                try {
+                    const findApp = await aplikasi.findOne({ file_name: ctx.message.document.file_name.split('.')[0] })
+                    if (!findApp) {
+                        const newApp = new aplikasi({
+                            file_name: ctx.message.document.file_name.split('.')[0],
+                            file_id: ctx.message.document.file_id,
+                            file_unique_id: ctx.message.document.file_unique_id,
+                            file_size: ctx.message.document.file_size,
+                            uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
+                            uploader_id: ctx.message.from.id
+                        })
+                        
+                        newApp.save()
+                        
+                        ctx.reply('[ ➕ ] Aplikasi berhasil disimpan', {
+                            "reply_to_message_id": ctx.message.message_id
+                        })
+                    
+                    } else {
+                        ctx.reply('[ ✔ ] Aplikasi sudah tersimpan.', {
+                            'reply_to_message_id': ctx.message.message_id
+                        })
+                    }
+                } catch (error) {
+                    console.log(error);
+
+                    ctx.reply('[ ✖ ] Terjadi error : ' + error, {
+                        'reply_to_message_id': ctx.message.message_id
+                    })
+                }
+            
+            } else {
+                ctx.reply('[ ✖ ] anda tidak punya akses', {
+                    'reply_to_message_id': ctx.message.message_id
+                })
+            }
+        } else {
+            ctx.reply('[ ✖ ] Maaf file jenis tidak diizinkan.', {
+                'reply_to_message_id': ctx.message.message_id
+            })
+        }
+    })
+
+    bot.command('/update', async (ctx) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
-        let admins = await ctx.getChatAdministrators(ctx.chat.id)
-        console.log("admin : ", admins);
 
-        const status = []
-
-        admins.map((found) => {
-            status.push(found.status)
-        })
+        if (!pecah) {
+            ctx.reply('Harap masukan nama yang ingin diupdate')
+        }
         
-        if (status.includes('administrator') || status.includes('creator') || ctx.message.from.id == AUTHOR) {
+        if (ctx.message.document.file_name.split('.').pop() == 'apk') {
+            
+            if (ctx.message.from.id === AUTHOR && ctx.from.isAdmin) {
+                        
+                try {
+                    await aplikasi.findOneAndUpdate({ file_name: pecah },
+                        {
+                            $set: {
+                                file_name: ctx.message.document.file_name.split('.')[0],
+                                file_id: ctx.message.document.file_id,
+                                file_unique_id: ctx.message.document.file_unique_id,
+                                file_size: ctx.message.document.file_size,
+                                uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
+                                uploader_id: ctx.message.from.id
+                            }
+                        }, {
+                            new: true
+                    }
+                    );
+                    
+                    ctx.reply('[ ➕ ] Aplikasi berhasil diubah', {
+                        "reply_to_message_id": ctx.message.message_id
+                    })
+                } catch (error) {
+                    console.log(error);
+                    ctx.reply('[ ✖ ] Terjadi error : ' + error, {
+                        'reply_to_message_id': ctx.message.message_id
+                    })
+                }
+
+
+            } else {
+                ctx.reply('[ ✖ ] anda tidak punya akses',{
+                    'reply_to_message_id': ctx.message.message_id
+                })
+            
+            }
+        } else {
+            ctx.reply('[ ✖ ] Maaf file jenis tidak diizinkan.', {
+                'reply_to_message_id': ctx.message.message_id
+            })
+        }
+    })
+
+    
+    bot.command('/delete', async (ctx) => {
+        const query = ctx.message.text
+        const pecah = query.split(' ').pop()
+        
+        if (!pecah) {
+            ctx.reply('Harap masukan nama yang ingin didelete')
+        }
+
+        if (ctx.message.from.id === AUTHOR && ctx.from.isAdmin) {
             aplikasi.findOneAndDelete({ file_name: pecah })
                 .then((res) => {
                     console.log(res);
@@ -96,210 +187,10 @@ exports.main = (bot) => {
                 })
         } else {
             ctx.reply('[ ✖ ] anda tidak punya akses', {
-                'reply_to_message_id': ctx.message.message_id,
-                'reply_markup': {
-                    'inline_keyboard': [
-                        [
-                            { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                        ]
-                    ]
-                }
+                'reply_to_message_id': ctx.message.message_id
             })
         }
 
 
-    })
-
-    bot.on('document', async (ctx) => {
-        
-        const args = ctx.message.caption.split(' ');
-        
-        console.log(args[0]);
-        
-        switch (args[0]) {
-            case "add":
-                const fileName = ctx.message.document.file_name.split('.').pop()
-                console.log(fileName);
-                
-                if (fileName == 'apk') {
-                    
-                    let admins = await ctx.getChatAdministrators(ctx.chat.id)
-                    console.log(admins);
-
-                    const status = []
-
-                    admins.map(async (found) => {
-                        status.push(found.status)
-                    })
-                    
-
-                    if (status.includes('administrator') || status.includes('creator') || ctx.message.from.id == AUTHOR) {
-                        
-                        try {
-                            const findApp = await aplikasi.findOne({ file_name: ctx.message.document.file_name.split('.')[0] })
-                            if (!findApp) {
-                                const newApp = new aplikasi({
-                                    file_name: ctx.message.document.file_name.split('.')[0],
-                                    file_id: ctx.message.document.file_id,
-                                    file_unique_id: ctx.message.document.file_unique_id,
-                                    file_size: ctx.message.document.file_size,
-                                    uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
-                                    uploader_id: ctx.message.from.id
-                                })
-                                
-                                newApp.save()
-                                
-                                ctx.reply('[ ➕ ] Aplikasi berhasil disimpan', {
-                                    "reply_to_message_id": ctx.message.message_id
-                                })
-                            
-                            } else {
-                                ctx.reply('[ ✔ ] Aplikasi sudah tersimpan.', {
-                                    'reply_to_message_id': ctx.message.message_id,
-                                    'reply_markup': {
-                                        'inline_keyboard': [
-                                            [
-                                                { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                            ]
-                                        ]
-                                    }
-                                })
-                            }
-                        } catch (error) {
-                            console.log(error);
-
-                            ctx.reply('[ ✖ ] Terjadi error : ' + error, {
-                                'reply_to_message_id': ctx.message.message_id,
-                                'reply_markup': {
-                                    'inline_keyboard': [
-                                        [
-                                            { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                        ]
-                                    ]
-                                }
-                            })
-                        }
-                    
-                    } else {
-                        ctx.reply('[ ✖ ] anda tidak punya akses', {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                    ]
-                                ]
-                            }
-                        })
-                    }
-                } else {
-                    ctx.reply('[ ✖ ] Maaf file jenis tidak diizinkan.', {
-                        'reply_to_message_id': ctx.message.message_id,
-                        'reply_markup': {
-                            'inline_keyboard': [
-                                [
-                                    { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                ]
-                            ]
-                        }
-                    })
-                }
-                break;
-            case 'update':
-                const tempName = ctx.message.caption.split(' ').pop()
-                console.log(tempName);
-                
-                if (ctx.message.document.file_name.split('.').pop() == 'apk') {
-
-                    let admins = await ctx.getChatAdministrators(ctx.chat.id)
-                    
-                    console.log(admins);
-                    
-                    const status = []
-
-                    admins.map(async (found) => {
-                        status.push(found.status)
-                    })
-                    
-                    if (status.includes('administrator') || status.includes('creator') || ctx.message.from.id == AUTHOR) {
-                        
-                        try {
-                            await aplikasi.findOneAndUpdate({ file_name: tempName },
-                                {
-                                    $set: {
-                                        file_name: ctx.message.document.file_name.split('.')[0],
-                                        file_id: ctx.message.document.file_id,
-                                        file_unique_id: ctx.message.document.file_unique_id,
-                                        file_size: ctx.message.document.file_size,
-                                        uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
-                                        uploader_id: ctx.message.from.id
-                                    }
-                                }, {
-                                    new: true
-                            }
-                            );
-                            
-                            ctx.reply('[ ➕ ] Aplikasi berhasil diubah', {
-                                "reply_to_message_id": ctx.message.message_id
-                            })
-                        } catch (error) {
-                            console.log(error);
-                            ctx.reply('[ ✖ ] Terjadi error : ' + error, {
-                                'reply_to_message_id': ctx.message.message_id,
-                                'reply_markup': {
-                                    'inline_keyboard': [
-                                        [
-                                            { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                        ]
-                                    ]
-                                }
-                            })
-                        }
-
-
-                    } else {
-                        ctx.reply('[ ✖ ] anda tidak punya akses',{
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                    ]
-                                ]
-                            }
-                        })
-                    
-                    }
-                } else {
-                    ctx.reply('[ ✖ ] Maaf file jenis tidak diizinkan.', {
-                        'reply_to_message_id': ctx.message.message_id,
-                        'reply_markup': {
-                            'inline_keyboard': [
-                                [
-                                    { text: 'Author 🤖', url: 'tg://user?id=1237885362' }
-                                ]
-                            ]
-                        }
-                    })
-                }
-                break
-        }
-    })
-
-    bot.command('/debug', async (ctx) => {
-
-        let admins = await ctx.getChatAdministrators(ctx.chat.id)
-        //console.log(admins);
-        const status = []
-
-        admins.map((res) => {
-            status.push(res.status)
-        })
-        
-        console.log(status.includes('administrator'));
-
-        ctx.reply('Application Logs Heroku', {
-            reply_to_message_id: ctx.message.message_id
-        })
     })
 }
