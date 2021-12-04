@@ -175,7 +175,7 @@ exports.main = (bot) => {
 
             await axios.get(`http://ghodel-api.herokuapp.com/api/v1/yt/show/${YoutubeID}`)
                 .then(async (res) => {
-                    console.log(res.data);
+                    console.log(res.status);
 
                     const quality = await axios.get(res.data.watch.downloadURL)
                         .then((response) => {
@@ -192,14 +192,16 @@ exports.main = (bot) => {
 
                         }).catch(console.error)
 
-                    ctx.replyWithPhoto(res.data.watch.thumbnail, {
+                    ctx.telegram.sendChatAction(ctx.chat.id, 'upload_photo')
+                    
+                    ctx.replyWithPhoto({ url: res.data.watch.thumbnail }, {
                         reply_to_message_id: ctx.message.message_id,
                         caption: res.data.watch.title,
                         reply_markup: {
                             inline_keyboard: [quality]
                         }
                     })
-                    
+
                 })
                 .catch(console.error)
         }
