@@ -43,7 +43,7 @@ exports.main = (bot) => {
     bot.help(async (ctx) => {
         const usernameBot = await ctx.telegram.getMe()
         
-        ctx.reply(`⚙ Command :` +
+        ctx.replyWithMarkdown(`* ⚙ Command : *` +
             `\n @${usernameBot.username} {text} - Cari photo dari pixabay inline query` +
             `\n /ytdl {url_video} - Youtube downloader` +
             `\n /list - Menampilkan daftar aplikasi` +
@@ -52,10 +52,10 @@ exports.main = (bot) => {
             `\n /update {nama_aplikasi_baru} - Mengubah nama dari aplikasi yang tersedia` +
             `\n /delete {nama_aplikasi} - Menghapus aplikasi dari database`
             , {
-                "reply_to_message_id": ctx.message.message_id,
-                "parse_mode": 'Markdown',
-                'reply_markup': {
-                    'inline_keyboard': [
+                reply_to_message_id: ctx.message.message_id,
+                parse_mode: 'MarkdownV2',
+                reply_markup: {
+                    inline_keyboard: [
                         [
                             { text: '🤖 Author', url: `https://t.me/${process.env.AUTHOR_USERNAME}` },
                             { text: '📂 Repo', url: `${process.env.REPO}` },
