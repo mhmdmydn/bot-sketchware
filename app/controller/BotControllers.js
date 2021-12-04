@@ -1,8 +1,8 @@
 'use-strict'
 const moment = require('moment')
+const axios = require('axios')
 const fs = require('fs')
 const ytdl = require('ytdl-core')
-const youtubedl = require('youtube-dl-exec')
 const Utils = require('./../utils/Utils')
 const apikey = process.env.PIXABAY_APIKEY || ''
 
@@ -160,44 +160,48 @@ exports.main = (bot) => {
 
     //command ytdl 
     bot.command('/ytdl', async (ctx) => {
-        
-        const message_id = ctx.message.message_id;
-        const args = ctx.update.message.text.split(' ');
-        const url = args[1];
 
-        console.log("URL : " + url);
-        
+        const args = ctx.update.message.text.split(' ').pop();
+        console.log("URL", args);
 
-        const file = await ytdl.getURLVideoID(url) + ".mp4"
-
-        console.log('file : ' + file);
-
-        if (!ytdl.validateURL(url)) {
+        if (!ytdl.validateURL(args)) {
             ctx.reply("Harap masukan url", {
                 "reply_to_message_id": ctx.message.message_id
             })
 
         } else {
 
-            await ytdl(url, { quality: "lowestvideo", filter: "audioandvideo" })
-                .pipe(await fs.createWriteStream(file)
-                    .on('error', () => {
-                        console.log("Error Create Write Stream");
+            const YoutubeID = ytdl.getURLVideoID(args);
+
+            await axios.get(`http://ghodel-api.herokuapp.com/api/v1/yt/show/${YoutubeID}`)
+                .then(async (res) => {
+                    console.log(res.data);
+
+                    const quality = await axios.get(res.data.watch.downloadURL)
+                        .then((response) => {
+                            const urlList = [];
+
+                            response.data.format.forEach((item, index) => {
+                                urlList.push({
+                                    text: item.qualityLabel,
+                                    url: item.downloadURL
+                                })
+                            })
+
+                            return urlList;
+
+                        }).catch(console.error)
+
+                    ctx.replyWithPhoto(res.data.watch.thumbnail, {
+                        reply_to_message_id: ctx.message.message_id,
+                        caption: res.data.watch.title,
+                        reply_markup: {
+                            inline_keyboard: [quality]
+                        }
                     })
-                    .on('finish', async () => {
-                        console.log('Mengirim video...');
-                        
-                        ctx.telegram.sendChatAction('upload_video')
-                        
-                        await ctx.telegram.sendVideo(ctx.chat.id, {
-                            url: file,
-                        }, {
-                            reply_to_message_id: message_id
-                        }).then(() => {
-                            console.log('Menghapus file...');
-                            fs.unlink(file)
-                        })
-                    }))
+                    
+                })
+                .catch(console.error)
         }
     })
 
