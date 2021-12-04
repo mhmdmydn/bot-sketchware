@@ -198,7 +198,7 @@ exports.main = (bot) => {
                         reply_to_message_id: ctx.message.message_id,
                         caption: res.data.watch.title,
                         reply_markup: {
-                            inline_keyboard: [quality]
+                            inline_keyboard: [quality, [{text: 'API', url:'http://ghodel-api.herokuapp.com/'}]]
                         }
                     })
 
