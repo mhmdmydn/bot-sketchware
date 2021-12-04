@@ -19,8 +19,8 @@ const AUTHOR = process.env.AUTHOR
 const PORT = process.env.PORT || 2002;
 
 const bot = new Telegraf(BOT_TOKEN)
-// bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
-// app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
+bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
+app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
 bot.use((ctx, next) => {
 	if (ctx.chat.id > 0) return next()
