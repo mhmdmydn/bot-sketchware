@@ -57,8 +57,8 @@ exports.main = (bot) => {
                 'reply_markup': {
                     'inline_keyboard': [
                         [
-                            { text: 'Author 🤖', url: `https://t.me/${process.env.AUTHOR_USERNAME}` },
-                            { text: 'Repo 📂', url: `${process.env.REPO}` },
+                            { text: '🤖 Author', url: `https://t.me/${process.env.AUTHOR_USERNAME}` },
+                            { text: '📂 Repo', url: `${process.env.REPO}` },
                         ]
                     ]
                 },
