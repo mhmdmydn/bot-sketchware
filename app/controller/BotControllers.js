@@ -215,15 +215,10 @@ exports.main = (bot) => {
     bot.command('/decode', (ctx) => {
         const args = ctx.update.message.text.split(' ').pop();
 
-        if (validator.isURL(args)) {
-            ctx.reply(decodeURIComponent(args), {
+        ctx.reply(decodeURIComponent(args), {
                 reply_to_message_id: ctx.message.message_id,
-            })
-        } else {
-            ctx.reply('URL tidak valid', {
-                reply_to_message_id: ctx.message.message_id,
-            })
-        }
+        })
+        
     })
 
     bot.command('/encode', (ctx) => {
