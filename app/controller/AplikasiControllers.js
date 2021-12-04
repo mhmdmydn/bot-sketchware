@@ -1,6 +1,5 @@
 'use-strict'
 const moment = require('moment')
-const validator = require('validator')
 const aplikasi = require('./../model/AplikasiModel')
 const AUTHOR = process.env.AUTHOR
 

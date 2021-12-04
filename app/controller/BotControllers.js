@@ -5,7 +5,7 @@ const fs = require('fs')
 const ytdl = require('ytdl-core')
 const Utils = require('./../utils/Utils')
 const apikey = process.env.PIXABAY_APIKEY || ''
-
+const validator = require('validator')
 
 exports.main = (bot) => {
 
@@ -50,7 +50,9 @@ exports.main = (bot) => {
             `\n /app {nama_aplikasi} - Mengirim aplikasi berdasarkan nama`+
             `\n /save - Menyimpan aplikasi dari user ke database` +
             `\n /update {nama_aplikasi_baru} - Mengubah nama dari aplikasi yang tersedia` +
-            `\n /delete {nama_aplikasi} - Menghapus aplikasi dari database`
+            `\n /delete {nama_aplikasi} - Menghapus aplikasi dari database` +
+            `\n /encode {url} - Url encode` +
+            `\n /decode {url} - Url decode`
             , {
                 reply_to_message_id: ctx.message.message_id,
                 parse_mode: 'HTML',
@@ -205,6 +207,36 @@ exports.main = (bot) => {
 
                 })
                 .catch(console.error)
+        }
+    })
+
+
+    //command url 
+    bot.command('/decode', (ctx) => {
+        const args = ctx.update.message.text.split(' ').pop();
+
+        if (validator.isURL(args)) {
+            ctx.reply(decodeURIComponent(args), {
+                reply_to_message_id: ctx.message.message_id,
+            })
+        } else {
+            ctx.reply('URL tidak valid', {
+                reply_to_message_id: ctx.message.message_id,
+            })
+        }
+    })
+
+    bot.command('/encode', (ctx) => {
+        const args = ctx.update.message.text.split(' ').pop();
+
+        if (validator.isURL(args)) {
+            ctx.reply(encodeURIComponent(args), {
+                reply_to_message_id: ctx.message.message_id,
+            })
+        } else {
+            ctx.reply('URL tidak valid', {
+                reply_to_message_id: ctx.message.message_id,
+            })
         }
     })
 
