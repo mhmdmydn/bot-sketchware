@@ -32,7 +32,7 @@ bot.use((ctx, next) => {
 			if (!data || !data.length) return
 			ctx.chat._admins = data
 			ctx.from.isAdmin = data.some((adm) => adm.user.id === ctx.from.id)
-			console.log("Admin: " + ctx.from.isAdmin);
+			console.log("Author OR Admin : ",ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
 		})
 		.catch(console.log)
 		.then((_) => next(ctx))

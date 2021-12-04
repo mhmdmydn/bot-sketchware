@@ -43,7 +43,7 @@ exports.main = (bot) => {
     bot.help(async (ctx) => {
         const usernameBot = await ctx.telegram.getMe()
         
-        ctx.reply(`*⚙ Command :*` +
+        ctx.reply(`⚙ Command :` +
             `\n @${usernameBot.username} {text} - Cari photo dari pixabay inline query` +
             `\n /ytdl {url_video} - Youtube downloader` +
             `\n /list - Menampilkan daftar aplikasi` +

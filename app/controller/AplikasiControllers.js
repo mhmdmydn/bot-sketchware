@@ -103,8 +103,6 @@ exports.main = (bot) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
 
-        console.log("Author OR Admin : ",ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
-
         const fileName = ctx.message.reply_to_message.document.file_name.split('.').pop()
 
         const name = ctx.message.reply_to_message.document.file_name.split('.')[0]
@@ -179,7 +177,7 @@ exports.main = (bot) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
 
-        console.log("Author OR Admin : ",ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
+
         if (!pecah) {
             ctx.reply('Harap masukan nama yang ingin diupdate')
         }
@@ -239,8 +237,6 @@ exports.main = (bot) => {
     bot.command('/delete', async (ctx) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
-        
-        console.log("Author OR Admin : ", ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
         
         if (!pecah) {
             ctx.reply('Harap masukan nama yang ingin didelete')
