@@ -196,7 +196,8 @@ exports.main = (bot) => {
                     
                     ctx.replyWithPhoto({ url: res.data.watch.thumbnail }, {
                         reply_to_message_id: ctx.message.message_id,
-                        caption: res.data.watch.title,
+                        caption: `<b>Title</b> : ${res.data.watch.title}\n\n <b>View</b> : ${res.data.watch.viewCount}\n\n <b>Likes</b> : ${res.data.watch.likes}\n\n <b>Published At</b> : ${res.data.watch.publishedAt}\n\n`,
+                        parse_mode: 'HTML',
                         reply_markup: {
                             inline_keyboard: [quality, [{text: 'API', url:'http://ghodel-api.herokuapp.com/'}]]
                         }
