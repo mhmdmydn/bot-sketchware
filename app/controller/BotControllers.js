@@ -43,7 +43,7 @@ exports.main = (bot) => {
     bot.help(async (ctx) => {
         const usernameBot = await ctx.telegram.getMe()
         
-        ctx.replyWithMarkdown(`* ⚙ Command : *` +
+        ctx.replyWithHTML(`<b>⚙ Command : </b>` +
             `\n @${usernameBot.username} {text} - Cari photo dari pixabay inline query` +
             `\n /ytdl {url_video} - Youtube downloader` +
             `\n /list - Menampilkan daftar aplikasi` +
@@ -53,7 +53,7 @@ exports.main = (bot) => {
             `\n /delete {nama_aplikasi} - Menghapus aplikasi dari database`
             , {
                 reply_to_message_id: ctx.message.message_id,
-                parse_mode: 'MarkdownV2',
+                parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [
                         [
