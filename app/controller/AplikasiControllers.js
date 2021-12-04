@@ -100,9 +100,18 @@ exports.main = (bot) => {
     //menyimpan app
     bot.command('/save', async (ctx) => {
 
-        console.log(ctx.from.isAdmin);
+        const query = ctx.message.text
+        const pecah = query.split(' ').pop()
+
+        console.log("Author OR Admin : ",ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
 
         const fileName = ctx.message.reply_to_message.document.file_name.split('.').pop()
+
+        const name = ctx.message.reply_to_message.document.file_name.split('.')[0]
+
+        name.split(' ').join('')
+
+        console.log();
 
         if (fileName == 'apk') {
 
@@ -170,6 +179,7 @@ exports.main = (bot) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
 
+        console.log("Author OR Admin : ",ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
         if (!pecah) {
             ctx.reply('Harap masukan nama yang ingin diupdate')
         }
@@ -229,6 +239,8 @@ exports.main = (bot) => {
     bot.command('/delete', async (ctx) => {
         const query = ctx.message.text
         const pecah = query.split(' ').pop()
+        
+        console.log("Author OR Admin : ", ctx.message.from.id === AUTHOR || ctx.from.isAdmin);
         
         if (!pecah) {
             ctx.reply('Harap masukan nama yang ingin didelete')

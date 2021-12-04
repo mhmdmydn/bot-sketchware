@@ -43,14 +43,14 @@ exports.main = (bot) => {
     bot.help(async (ctx) => {
         const usernameBot = await ctx.telegram.getMe()
         
-        ctx.reply(`*** ⚙ Command :  ***` +
+        ctx.reply(`*⚙ Command :*` +
             `\n @${usernameBot.username} {text} - Cari photo dari pixabay inline query` +
-            `\n /ytdl {url video} - Youtube downloader` +
+            `\n /ytdl {url_video} - Youtube downloader` +
             `\n /list - Menampilkan daftar aplikasi` +
             `\n /app {nama_aplikasi} - Mengirim aplikasi berdasarkan nama`+
             `\n /save - Menyimpan aplikasi dari user ke database` +
             `\n /update {nama_aplikasi_baru} - Mengubah nama dari aplikasi yang tersedia` +
-            `\n /delete - Menghapus aplikasi dari database`
+            `\n /delete {nama_aplikasi} - Menghapus aplikasi dari database`
             , {
                 "reply_to_message_id": ctx.message.message_id,
                 "parse_mode": 'Markdown',
