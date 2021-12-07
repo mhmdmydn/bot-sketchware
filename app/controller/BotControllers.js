@@ -261,7 +261,7 @@ exports.main = (bot) => {
             console.log(imgURL.href);
 
             try {
-                const text = await tesseract.recognize(imgURL.href, tesserOpt)
+                const text = await tesseract.recognize(imgURL.href)
                 console.log("Result:", text)
 
                 if (lang === "/ocr") {
@@ -303,7 +303,7 @@ exports.main = (bot) => {
                 console.log(fileURL.href);
 
                 try {
-                    const text = await tesseract.recognize(fileURL.href, tesserOpt)
+                    const text = await tesseract.recognize(fileURL.href)
                     console.log("Result:", text)
 
                     if (lang === "/ocr") {
