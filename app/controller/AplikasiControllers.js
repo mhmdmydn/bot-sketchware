@@ -158,8 +158,7 @@ exports.main = (bot) => {
                 }
 
             } else if (ctx.message.from.id === AUTHOR) {
-                
-                                try {
+                try {
                     const findApp = await aplikasi.findOne({ file_name: ctx.message.reply_to_message.document.file_name.split('.')[0] })
                     if (!findApp) {
                         const newApp = new aplikasi({
