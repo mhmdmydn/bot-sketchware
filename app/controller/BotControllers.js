@@ -6,6 +6,9 @@ const ytdl = require('ytdl-core')
 const Utils = require('./../utils/Utils')
 const apikey = process.env.PIXABAY_APIKEY || ''
 const validator = require('validator')
+const tesseract = require("node-tesseract-ocr")
+const translate = require('@iamtraction/google-translate');
+const mime = require('mime-types')
 
 exports.main = (bot) => {
 
@@ -232,6 +235,170 @@ exports.main = (bot) => {
             ctx.reply('URL tidak valid', {
                 reply_to_message_id: ctx.message.message_id,
             })
+        }
+    })
+
+    //ocr 
+    bot.command('/ocr', async (ctx) => {
+
+        const args = ctx.message.text;
+        const lang = args.split(' ').pop();
+
+        const photo = ctx.message.reply_to_message.photo;
+        const document = ctx.message.reply_to_message.document;
+        
+        const tesserOpt = {
+            lang: "eng", // default
+            oem: 3,
+            psm: 3,
+        }
+        
+
+        if (photo) {
+            const qualityHD = photo[photo.length - 1];
+            const imgID = qualityHD.file_id;
+            const imgURL = await ctx.telegram.getFileLink(imgID)
+            console.log(imgURL.href);
+
+            try {
+                const text = await tesseract.recognize(imgURL.href, tesserOpt)
+                console.log("Result:", text)
+
+                if (lang === "/ocr") {
+                    ctx.reply(text, {
+                            reply_to_message_id: ctx.message.message_id,
+                    })
+                    
+                } else {
+                    
+                    translate(text, { to: lang }).then(res => {
+                        console.log(res);
+                        console.log(res.text); // OUTPUT: You are amazing!
+    
+                        ctx.reply(res.text, {
+                            reply_to_message_id: ctx.message.message_id,
+                        })
+                    }).catch(err => {
+                        console.log("[ERROR] translate : ", err);
+                        ctx.reply("[ERROR] Server sedang ganguan...", {
+                            reply_to_message_id: ctx.message.message_id,
+                        })
+                    });
+                }
+
+
+            } catch (error) {
+                console.log("[ERROR] tesseract : ", error);
+                ctx.reply("[ERROR] Server sedang ganguan...", {
+                    reply_to_message_id: ctx.message.message_id,
+                })
+            }
+            
+        } else if (document) {
+            console.log(mime.extension(document.mime_type));
+
+            if (mime.extension(document.mime_type) === "png" || mime.extension(document.mime_type) === "jpeg" || mime.extension(document.mime_type) === "jpg") {
+                const fileHD = document.file_id;
+                const fileURL = await ctx.telegram.getFileLink(fileHD)
+                console.log(fileURL.href);
+
+                try {
+                    const text = await tesseract.recognize(fileURL.href, tesserOpt)
+                    console.log("Result:", text)
+
+                    if (lang === "/ocr") {
+                    ctx.reply(text, {
+                            reply_to_message_id: ctx.message.message_id,
+                    })
+                    
+                } else {
+                    
+                    translate(text, { to: lang }).then(res => {
+                        console.log(res);
+                        console.log(res.text); // OUTPUT: You are amazing!
+    
+                        ctx.reply(res.text, {
+                            reply_to_message_id: ctx.message.message_id,
+                        })
+                    }).catch(err => {
+                        console.log("[ERROR] translate : ", err);
+                        ctx.reply("[ERROR] Server sedang ganguan...", {
+                            reply_to_message_id: ctx.message.message_id,
+                        })
+                    });
+                }
+
+                } catch (error) {
+                    console.log("[ERROR] tesseract : ", error);
+
+                    ctx.reply("[ERROR] Server sedang ganguan...", {
+                        reply_to_message_id: ctx.message.message_id,
+                    })
+                }
+                
+                
+            } else {
+                ctx.reply("[ERROR] Maaf jenis file tidak didukung...", {
+                    reply_to_message_id: ctx.message.message_id,
+                })
+            }
+        } else {
+            ctx.reply("[ERROR] Maaf jenis file tidak didukung...", {
+                reply_to_message_id: ctx.message.message_id,
+            })
+
+        }
+    })
+
+    //translate
+    bot.command('/translate', (ctx) => {
+        const args = ctx.message.text;
+        const lang = args.split(' ').pop();
+
+        const text = ctx.message.reply_to_message.text
+        console.log(lang);
+        
+
+        if (text) {
+
+            if (lang === '/translate') {
+                
+                translate(text, { to: 'auto' }).then(res => {
+                    console.log(res);
+                    console.log(res.text); // OUTPUT: You are amazing!
+
+                    ctx.reply(res.text, {
+                        reply_to_message_id: ctx.message.message_id,
+                    })
+                    
+                }).catch(err => {
+                    console.log("[ERROR] translate : ", err);
+
+                    ctx.reply("[ERROR] Server sedang ganguan...", {
+                        reply_to_message_id: ctx.message.message_id,
+                    })
+                });
+
+            } else {
+
+                translate(text, { to: lang }).then(res => {
+                    console.log(res);
+                    console.log(res.text); // OUTPUT: You are amazing!
+
+                    ctx.reply(res.text, {
+                        reply_to_message_id: ctx.message.message_id,
+                    })
+                    
+                }).catch(err => {
+                    console.log("[ERROR] translate : ", err);
+
+                    ctx.reply("[ERROR] Server sedang ganguan...", {
+                        reply_to_message_id: ctx.message.message_id,
+                    })
+                });
+            }
+        } else {
+            ctx.reply('[ERROR] Maaf hanya mengizinkan text')
         }
     })
 

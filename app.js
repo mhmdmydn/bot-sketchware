@@ -23,6 +23,9 @@ bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`)
 app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
 bot.use((ctx, next) => {
+
+	console.log("[MESSAGE]", ctx.message);
+	
 	if (ctx.chat.id > 0) return next()
 
 	return ctx.telegram

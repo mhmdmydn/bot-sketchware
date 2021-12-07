@@ -9,17 +9,23 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
+    "start": "node app",
+    "dev": "nodemon app"
   },
   "author": "Muhammad Mayudin",
   "license": "ISC",
   "dependencies": {
+    "@iamtraction/google-translate": "^1.1.2",
     "axios": "^0.21.4",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "lowdb": "^3.0.0",
+    "mime-types": "^2.1.34",
     "moment": "^2.29.1",
     "mongoose": "^6.0.8",
+    "node-tesseract-ocr": "^2.2.1",
     "telegraf": "^4.4.2",
+    "url": "^0.11.0",
     "validator": "^13.7.0",
     "ytdl-core": "^4.9.1"
   }
