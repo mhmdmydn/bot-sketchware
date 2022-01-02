@@ -37,7 +37,7 @@ exports.main = (bot) => {
 
         if (!pecah) {
 
-            ctx.reply('[ ✖ ] Harap masukan nama aplikasi setelah command /getapp {nama_app}. untuk melihat nama aplikasi /list', {
+            ctx.reply('[ ✖ ] Harap masukan nama aplikasi setelah command /app {nama_app}. untuk melihat nama aplikasi /list', {
                 'reply_to_message_id': ctx.message.message_id
             })
 
@@ -110,54 +110,7 @@ exports.main = (bot) => {
 
         if (fileName == 'apk') {
 
-            if (ctx.from.isAdmin) {
-                
-                try {
-                    const findApp = await aplikasi.findOne({ file_name: ctx.message.reply_to_message.document.file_name.split('.')[0] })
-                    if (!findApp) {
-                        const newApp = new aplikasi({
-                            file_name: ctx.message.reply_to_message.document.file_name.split('.')[0],
-                            file_id: ctx.message.reply_to_message.document.file_id,
-                            file_unique_id: ctx.message.reply_to_message.document.file_unique_id,
-                            file_size: ctx.message.reply_to_message.document.file_size,
-                            uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
-                            uploader_id: ctx.message.from.id
-                        })
-                        
-                        newApp.save()
-                        
-                        ctx.reply('[ ➕ ] Aplikasi berhasil disimpan', {
-                            "reply_to_message_id": ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                    ]
-                                ]
-                            }
-                        })
-                    
-                    } else {
-                        ctx.reply('[ ✔ ] Aplikasi sudah tersimpan.', {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                    ]
-                                ]
-                            }
-                        })
-                    }
-                } catch (error) {
-                    console.log(error);
-
-                    ctx.reply('[ ✖ ] Terjadi error : ' + error, {
-                        'reply_to_message_id': ctx.message.message_id
-                    })
-                }
-
-            } else if (ctx.message.from.id === AUTHOR) {
+            if (ctx.from.isAdmin || ctx.message.from.id == AUTHOR) {
                 try {
                     const findApp = await aplikasi.findOne({ file_name: ctx.message.reply_to_message.document.file_name.split('.')[0] })
                     if (!findApp) {
@@ -208,7 +161,6 @@ exports.main = (bot) => {
                     'reply_to_message_id': ctx.message.message_id
                 })
             }
-
 
         } else {
             ctx.reply('[ ✖ ] Maaf file jenis tidak diizinkan.', {
@@ -229,41 +181,7 @@ exports.main = (bot) => {
         
         if (ctx.message.reply_to_message.document.file_name.split('.').pop() == 'apk') {
 
-            if (ctx.from.isAdmin) {
-                try {
-                    await aplikasi.findOneAndUpdate({ file_name: pecah },
-                        {
-                            $set: {
-                                file_name: ctx.message.reply_to_message.document.file_name.split('.')[0],
-                                file_id: ctx.message.reply_to_message.document.file_id,
-                                file_unique_id: ctx.message.reply_to_message.document.file_unique_id,
-                                file_size: ctx.message.reply_to_message.document.file_size,
-                                uploader_name: (ctx.message.from.username == undefined) ? ctx.message.from.first_name + ' ' + ctx.message.from.last_name : ctx.message.from.username,
-                                uploader_id: ctx.message.from.id
-                            }
-                        }, {
-                            new: true
-                    }
-                    );
-                    
-                    ctx.reply('[ ➕ ] Aplikasi berhasil diubah', {
-                        "reply_to_message_id": ctx.message.message_id,
-                        'reply_markup': {
-                            'inline_keyboard': [
-                                [
-                                    { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                ]
-                            ]
-                        }
-                    })
-                } catch (error) {
-                    console.log(error);
-                    ctx.reply('[ ✖ ] Terjadi error : ' + error, {
-                        'reply_to_message_id': ctx.message.message_id
-                    })
-                }
-
-            } else if (ctx.message.from.id === AUTHOR) {
+            if (ctx.from.isAdmin || ctx.message.from.id == AUTHOR) {
 
                 try {
                     await aplikasi.findOneAndUpdate({ file_name: pecah },
@@ -297,12 +215,12 @@ exports.main = (bot) => {
                         'reply_to_message_id': ctx.message.message_id
                     })
                 }
+
 
             } else {
                 ctx.reply('[ ✖ ] anda tidak punya akses', {
-                        'reply_to_message_id': ctx.message.message_id
+                    'reply_to_message_id': ctx.message.message_id
                 })
-    
             }
             
         } else {
@@ -321,84 +239,55 @@ exports.main = (bot) => {
             ctx.reply('Harap masukan nama yang ingin didelete')
         }
 
-        if (ctx.from.isAdmin) {
+        if (ctx.from.isAdmin || ctx.message.from.id == AUTHOR) {
+            await aplikasi.findOneAndDelete({ file_name: pecah })
+                .then((res) => {
+                    console.log(res);
+                    if (res) {
+                        ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi", {
+                            'reply_to_message_id': ctx.message.message_id,
+                            'reply_markup': {
+                                'inline_keyboard': [
+                                    [
+                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
+                                    ]
+                                ]
+                            }
+                        })
+                    } else {
+                        ctx.reply("[ ❗ ] Aplikasi tidak ditemukan", {
+                            'reply_to_message_id': ctx.message.message_id,
+                            'reply_markup': {
+                                'inline_keyboard': [
+                                    [
+                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
+                                    ]
+                                ]
+                            }
+                        })
+                    }
+                
+                }).catch((err) => {
+                    console.log(err);
+                    ctx.reply("[ ✖ ] Terjadi error : " + err, {
+                        'reply_to_message_id': ctx.message.message_id
+                    })
+                })
+        } else {
+            ctx.reply('[ ✖ ] anda tidak punya akses', {
+                'reply_to_message_id': ctx.message.message_id
+            })
+        }
 
-            await aplikasi.findOneAndDelete({ file_name: pecah })
-                .then((res) => {
-                    console.log(res);
-                    if (res) {
-                        ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi", {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                    ]
-                                ]
-                            }
-                        })
-                    } else {
-                        ctx.reply("[ ❗ ] Aplikasi tidak ditemukan", {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                                'inline_keyboard': [
-                                    [
-                                        { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                    ]
-                                ]
-                            }
-                        })
-                    }
-                
-                }).catch((err) => {
-                    console.log(err);
-                    ctx.reply("[ ✖ ] Terjadi error : " + err, {
-                        'reply_to_message_id': ctx.message.message_id
-                    })
-                })
-            
-        } else if (ctx.message.from.id === AUTHOR) {
-            await aplikasi.findOneAndDelete({ file_name: pecah })
-                .then((res) => {
-                    console.log(res);
-                    if (res) {
-                        ctx.reply("[ ✔ ] Berhasil menghapus satu aplikasi", {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                            'inline_keyboard': [
-                                [
-                                    { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                ]
-                            ]
-                        }
-                        })
-                    } else {
-                        ctx.reply("[ ❗ ] Aplikasi tidak ditemukan", {
-                            'reply_to_message_id': ctx.message.message_id,
-                            'reply_markup': {
-                            'inline_keyboard': [
-                                [
-                                    { text: 'Lihat Daftar Aplikasi', callback_data: 'app' }
-                                ]
-                            ]
-                        }
-                        })
-                    }
-                
-                }).catch((err) => {
-                    console.log(err);
-                    ctx.reply("[ ✖ ] Terjadi error : " + err, {
-                        'reply_to_message_id': ctx.message.message_id
-                    })
-                })
+    })
+
+
+    if (ctx.from.isAdmin || ctx.message.from.id == AUTHOR) {
             
         } else {
             ctx.reply('[ ✖ ] anda tidak punya akses', {
-                    'reply_to_message_id': ctx.message.message_id
+                'reply_to_message_id': ctx.message.message_id
             })
-            
-        }
-
-
-    })
+    }
+    
 }
